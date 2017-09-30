@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
+import { ProjectFormValidatorsService } from './project-form-validators.service';
+
 @NgModule({
     declarations: [
         AppComponent
@@ -14,7 +16,7 @@ import { AppComponent } from './app.component';
         ReactiveFormsModule,
         HttpModule
     ],
-    providers: [],
+    providers: [ProjectFormValidatorsService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ProjectFormValidatorsService } from './project-form-validators.service';
+import { projectFormErrors } from './project-form-errors';
 
 @Component({
     selector: 'app-root',
@@ -9,20 +11,18 @@ import { FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 export class AppComponent implements OnInit {
     projectForm: FormGroup;
     projectStatuses = ['Stable', 'Critical', 'Finished'];
-    formErrors = {
-        'projectName': {
-            'required': 'Project name is required!',
-            'invalidProjectName': 'Project name is invalid!'
-        },
-        'mail': {
-            'required': 'Mail is required!',
-            'email': 'Mail must be a valid email address!'           
-        }
-    };
+
+    constructor(private projectFormValidatorsService: ProjectFormValidatorsService) {
+
+    }
 
     ngOnInit() {
         this.projectForm = new FormGroup({
-            'projectName': new FormControl(null, Validators.required, this.validateProjectName),
+            'projectName': new FormControl(
+                null, 
+                Validators.required, 
+                this.projectFormValidatorsService.validateProjectNameAsync
+            ),
             'mail': new FormControl(null, [Validators.required, Validators.email]),
             'projectStatus': new FormControl('Stable')
         });       
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
 
         if (field && field.errors) {
             let errors = Object.keys(field.errors);           
-            return this.formErrors[fieldName][errors[0]];
+            return projectFormErrors[fieldName][errors[0]];
         }
 
         return '';
